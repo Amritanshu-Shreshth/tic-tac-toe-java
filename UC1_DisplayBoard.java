@@ -1,4 +1,4 @@
-public class TicTacToe {
+public class UC1_DisplayBoard {
 
     static char[][] board = new char[3][3];
 
