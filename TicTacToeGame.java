@@ -3,10 +3,10 @@ import java.util.Scanner;
 
 /**
  * TicTacToe Game
- * Combined Implementation of:
  * UC1 - Display Empty Board
  * UC2 - Toss to Decide First Player and Symbol
  * UC3 - Accept User Slot Input
+ * UC4 - Convert Slot to Row & Column
  */
 public class TicTacToeGame {
 
@@ -22,19 +22,31 @@ public class TicTacToeGame {
     static char humanSymbol;
     static char computerSymbol;
 
+    // =========================
+    // UC3: Scanner (global)
+    // =========================
+    static Scanner sc = new Scanner(System.in);
+
     public static void main(String[] args) {
 
-        // UC1: Initialize and display board
+        // UC1: Initialize & display board
         initializeBoard();
         printBoard();
 
-        // UC2: Toss and assign symbols
+        // UC2: Toss
         tossAndAssignSymbols();
         displayTossResult();
 
-        // UC3: Take user input
+        // UC3: Get user input
         int slot = getUserSlot();
-        System.out.println("You selected slot: " + slot);
+
+        // UC4: Convert slot → row & column
+        int row = getRowFromSlot(slot);
+        int col = getColFromSlot(slot);
+
+        System.out.println("\nConverted Position:");
+        System.out.println("Row: " + row);
+        System.out.println("Column: " + col);
     }
 
     // =========================
@@ -72,7 +84,7 @@ public class TicTacToeGame {
     // =========================
     static void tossAndAssignSymbols() {
         Random random = new Random();
-        int toss = random.nextInt(2); // 0 or 1
+        int toss = random.nextInt(2);
 
         if (toss == 0) {
             isHumanTurn = true;
@@ -105,11 +117,21 @@ public class TicTacToeGame {
     // UC3: Get User Input
     // =========================
     static int getUserSlot() {
-        Scanner sc = new Scanner(System.in);
-
         System.out.print("\nEnter slot number (1-9): ");
-        int slot = sc.nextInt(); // no validation yet
+        return sc.nextInt();
+    }
 
-        return slot;
+    // =========================
+    // UC4: Convert Slot → Row
+    // =========================
+    static int getRowFromSlot(int slot) {
+        return (slot - 1) / 3;
+    }
+
+    // =========================
+    // UC4: Convert Slot → Column
+    // =========================
+    static int getColFromSlot(int slot) {
+        return (slot - 1) % 3;
     }
 }
