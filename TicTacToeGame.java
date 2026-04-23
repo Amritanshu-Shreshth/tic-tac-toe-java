@@ -7,6 +7,7 @@ import java.util.Scanner;
  * UC2 - Toss to Decide First Player and Symbol
  * UC3 - Accept User Slot Input
  * UC4 - Convert Slot to Row & Column
+ * UC5 - Validate User Move
  */
 public class TicTacToeGame {
 
@@ -29,24 +30,28 @@ public class TicTacToeGame {
 
     public static void main(String[] args) {
 
-        // UC1: Initialize & display board
+        // UC1
         initializeBoard();
         printBoard();
 
-        // UC2: Toss
+        // UC2
         tossAndAssignSymbols();
         displayTossResult();
 
-        // UC3: Get user input
+        // UC3
         int slot = getUserSlot();
 
-        // UC4: Convert slot → row & column
+        // UC4
         int row = getRowFromSlot(slot);
         int col = getColFromSlot(slot);
+
+        // UC5
+        boolean isValid = isValidMove(row, col);
 
         System.out.println("\nConverted Position:");
         System.out.println("Row: " + row);
         System.out.println("Column: " + col);
+        System.out.println("Is move valid? " + isValid);
     }
 
     // =========================
@@ -69,11 +74,9 @@ public class TicTacToeGame {
 
         for (int row = 0; row < 3; row++) {
             System.out.print("| ");
-
             for (int col = 0; col < 3; col++) {
                 System.out.print(board[row][col] + " | ");
             }
-
             System.out.println();
             System.out.println("-------------");
         }
@@ -133,5 +136,23 @@ public class TicTacToeGame {
     // =========================
     static int getColFromSlot(int slot) {
         return (slot - 1) % 3;
+    }
+
+    // =========================
+    // UC5: Validate Move
+    // =========================
+    static boolean isValidMove(int row, int col) {
+
+        // Check boundaries (0–2)
+        if (row < 0 || row > 2 || col < 0 || col > 2) {
+            return false;
+        }
+
+        // Check if cell is empty
+        if (board[row][col] != '-') {
+            return false;
+        }
+
+        return true;
     }
 }
