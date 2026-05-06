@@ -9,6 +9,7 @@ import java.util.Scanner;
  * UC4 - Convert Slot to Row & Column
  * UC5 - Validate User Move
  * UC6 - Place Move on Board
+ * UC7 - Computer Makes Random Move
  */
 public class TicTacToeGame {
 
@@ -29,6 +30,9 @@ public class TicTacToeGame {
     // =========================
     static Scanner sc = new Scanner(System.in);
 
+    // Random object for UC2 & UC7
+    static Random random = new Random();
+
     public static void main(String[] args) {
 
         // =========================
@@ -44,33 +48,34 @@ public class TicTacToeGame {
         displayTossResult();
 
         // =========================
-        // UC3: User Input
+        // Human Move
         // =========================
         int slot = getUserSlot();
 
-        // =========================
-        // UC4: Slot Conversion
-        // =========================
         int row = getRowFromSlot(slot);
         int col = getColFromSlot(slot);
 
-        // =========================
-        // UC5: Validate Move
-        // =========================
         if (isValidMove(row, col)) {
 
-            // =========================
-            // UC6: Place Move
-            // =========================
+            // UC6: Place Human Move
             placeMove(row, col, humanSymbol);
 
-            System.out.println("\nMove placed successfully!");
+            System.out.println("\nHuman move placed!");
 
         } else {
+
             System.out.println("\nInvalid move!");
         }
 
-        // Print updated board
+        // Print board after human move
+        printBoard();
+
+        // =========================
+        // UC7: Computer Move
+        // =========================
+        computerMove();
+
+        // Print board after computer move
         printBoard();
     }
 
@@ -114,8 +119,6 @@ public class TicTacToeGame {
     // UC2: Toss Logic
     // =========================
     static void tossAndAssignSymbols() {
-
-        Random random = new Random();
 
         int toss = random.nextInt(2);
 
@@ -186,13 +189,13 @@ public class TicTacToeGame {
     // =========================
     static boolean isValidMove(int row, int col) {
 
-        // Check boundaries
+        // Boundary check
         if (row < 0 || row > 2 || col < 0 || col > 2) {
 
             return false;
         }
 
-        // Check if cell is empty
+        // Empty cell check
         if (board[row][col] != '-') {
 
             return false;
@@ -202,10 +205,44 @@ public class TicTacToeGame {
     }
 
     // =========================
-    // UC6: Place Move on Board
+    // UC6: Place Move
     // =========================
     static void placeMove(int row, int col, char symbol) {
 
         board[row][col] = symbol;
+    }
+
+    // =========================
+    // UC7: Computer Random Move
+    // =========================
+    static void computerMove() {
+
+        int slot;
+        int row;
+        int col;
+
+        System.out.println("\nComputer is making a move...");
+
+        // Keep generating until valid move found
+        while (true) {
+
+            // Random slot 1–9
+            slot = random.nextInt(9) + 1;
+
+            // Convert slot
+            row = getRowFromSlot(slot);
+            col = getColFromSlot(slot);
+
+            // Check validity
+            if (isValidMove(row, col)) {
+
+                // Place move
+                placeMove(row, col, computerSymbol);
+
+                System.out.println("Computer selected slot: " + slot);
+
+                break;
+            }
+        }
     }
 }
