@@ -10,6 +10,7 @@ import java.util.Scanner;
  * UC5 - Validate User Move
  * UC6 - Place Move on Board
  * UC7 - Computer Makes Random Move
+ * UC8 - Continuous Turn-Based Game Loop
  */
 public class TicTacToeGame {
 
@@ -26,11 +27,16 @@ public class TicTacToeGame {
     static char computerSymbol;
 
     // =========================
+    // UC8: Game Loop Flags
+    // =========================
+    static boolean gameOver = false;
+
+    // =========================
     // UC3: Global Scanner
     // =========================
     static Scanner sc = new Scanner(System.in);
 
-    // Random object for UC2 & UC7
+    // Random object
     static Random random = new Random();
 
     public static void main(String[] args) {
@@ -39,43 +45,77 @@ public class TicTacToeGame {
         // UC1: Initialize Board
         // =========================
         initializeBoard();
-        printBoard();
 
         // =========================
-        // UC2: Toss
+        // UC2: Toss Logic
         // =========================
         tossAndAssignSymbols();
         displayTossResult();
 
         // =========================
-        // Human Move
+        // UC8: Continuous Game Loop
         // =========================
-        int slot = getUserSlot();
+        while (!gameOver) {
 
-        int row = getRowFromSlot(slot);
-        int col = getColFromSlot(slot);
+            // Print current board
+            printBoard();
 
-        if (isValidMove(row, col)) {
+            // =========================
+            // Human Turn
+            // =========================
+            if (isHumanTurn) {
 
-            // UC6: Place Human Move
-            placeMove(row, col, humanSymbol);
+                System.out.println("\n--- Human Turn ---");
 
-            System.out.println("\nHuman move placed!");
+                int slot = getUserSlot();
 
-        } else {
+                int row = getRowFromSlot(slot);
+                int col = getColFromSlot(slot);
 
-            System.out.println("\nInvalid move!");
+                // UC5: Validate move
+                if (isValidMove(row, col)) {
+
+                    // UC6: Place move
+                    placeMove(row, col, humanSymbol);
+
+                    // Switch turn
+                    isHumanTurn = false;
+
+                } else {
+
+                    System.out.println("Invalid move! Try again.");
+                }
+
+            }
+
+            // =========================
+            // Computer Turn
+            // =========================
+            else {
+
+                System.out.println("\n--- Computer Turn ---");
+
+                // UC7: Computer random move
+                computerMove();
+
+                // Switch turn
+                isHumanTurn = true;
+            }
+
+            // =========================
+            // UC8: Temporary Stop Condition
+            // (Until win/draw UC is added)
+            // =========================
+            if (isBoardFull()) {
+
+                gameOver = true;
+
+                System.out.println("\nBoard is full!");
+                System.out.println("Game Over!");
+            }
         }
 
-        // Print board after human move
-        printBoard();
-
-        // =========================
-        // UC7: Computer Move
-        // =========================
-        computerMove();
-
-        // Print board after computer move
+        // Final board
         printBoard();
     }
 
@@ -221,12 +261,9 @@ public class TicTacToeGame {
         int row;
         int col;
 
-        System.out.println("\nComputer is making a move...");
-
-        // Keep generating until valid move found
         while (true) {
 
-            // Random slot 1–9
+            // Random slot 1-9
             slot = random.nextInt(9) + 1;
 
             // Convert slot
@@ -244,5 +281,24 @@ public class TicTacToeGame {
                 break;
             }
         }
+    }
+
+    // =========================
+    // UC8: Check if Board Full
+    // =========================
+    static boolean isBoardFull() {
+
+        for (int row = 0; row < 3; row++) {
+
+            for (int col = 0; col < 3; col++) {
+
+                if (board[row][col] == '-') {
+
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }
